@@ -39,11 +39,15 @@ export default function CustomerLogin() {
   // handle login submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const payload = {
+      email: formData.email.trim(),
+      password: formData.password.trim()
+    };
 
     try {
       const response = await axios.post(
         API_BASE_URL + "/api/login-customer/",
-        formData
+        payload
       );
 
       const result = response.data;
@@ -68,7 +72,7 @@ export default function CustomerLogin() {
         // If not a customer, try admin credentials automatically.
         const adminResponse = await axios.post(
           API_BASE_URL + "/api/login-admin/",
-          formData
+          payload
         );
 
         const adminResult = adminResponse.data;
@@ -98,9 +102,10 @@ export default function CustomerLogin() {
       }
 
     } catch (error) {
+      const backendMsg = error?.response?.data?.message || error?.response?.data?.detail;
       setAlert({
         show: true,
-        message: "Server error. Try again.",
+        message: backendMsg || "Server error. Try again.",
         type: "danger"
       });
     }
