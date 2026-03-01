@@ -6,10 +6,7 @@ python manage.py collectstatic --no-input
 
 python manage.py migrate
 
-if [[ $SEED_DEMO_DATA ]];
-then
-    python manage.py seed_demo
-fi
+python manage.py seed_demo
 
 if [[ $CREATE_SUPERUSER ]];
 then
