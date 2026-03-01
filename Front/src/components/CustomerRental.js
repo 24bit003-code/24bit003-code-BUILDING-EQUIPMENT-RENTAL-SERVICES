@@ -3,7 +3,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
+const API_BASE = API_BASE_URL;
 const PLACEHOLDER_IMAGE = "https://via.placeholder.com/160x120?text=No+Image";
 
 const getImageUrl = (image) => {
@@ -39,7 +40,7 @@ export default function CustomerRental() {
 
     if (!email) return;
 
-    fetch("http://127.0.0.1:8000/api/get-customer/", {
+    fetch(API_BASE_URL + "/api/get-customer/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
@@ -53,7 +54,7 @@ export default function CustomerRental() {
   useEffect(() => {
     if (!customer) return;
 
-    fetch(`http://127.0.0.1:8000/api/payment/${customer.id}/`) // your backend should return all payments for a customer
+    fetch(`${API_BASE_URL}/api/payment/${customer.id}/`) // your backend should return all payments for a customer
       .then(res => res.json())
       .then(data => setPayments(data))
       .catch(err => console.error(err));
@@ -63,7 +64,7 @@ export default function CustomerRental() {
   // const handleDelete = (paymentId) => {
   //   if (!window.confirm("Are you sure you want to delete this rental?")) return;
 
-  //   fetch(`http://127.0.0.1:8000/api/payment/${paymentId}/`, { method: "DELETE" })
+  //   fetch(`${API_BASE_URL}/api/payment/${paymentId}/`, { method: "DELETE" })
   //     .then(res => {
   //       if (res.ok) {
   //         setPayments(payments.filter(p => p.id !== paymentId));
@@ -84,7 +85,7 @@ useEffect(() => {
     // Skip if already fetched
     if (equipmentMap[eqId]) return;
 
-    fetch(`http://127.0.0.1:8000/api/equipment/${eqId}/`)
+    fetch(`${API_BASE_URL}/api/equipment/${eqId}/`)
       .then(res => res.json())
       .then(data => {
         setEquipmentMap(prev => ({ ...prev, [eqId]: data }));
@@ -225,3 +226,5 @@ useEffect(() => {
     </div>
   );
 }
+
+

@@ -6,6 +6,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
+
 export default function CustomerRegisterHorizontal() {
 
   const [showPassword, setShowPassword] = useState(false);
@@ -40,7 +42,7 @@ export default function CustomerRegisterHorizontal() {
     try {
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/register-customer/",
+        API_BASE_URL + "/api/register-customer/",
         formData
       );
 
@@ -250,3 +252,5 @@ export default function CustomerRegisterHorizontal() {
     </div>
   );
 }
+
+

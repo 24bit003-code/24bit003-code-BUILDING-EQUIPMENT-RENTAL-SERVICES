@@ -4,6 +4,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
+
 export default function Adminprofile() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [admin, setAdmin] = useState(null);
@@ -30,7 +32,7 @@ export default function Adminprofile() {
 
     if (!email) return;
 
-    fetch("http://127.0.0.1:8000/api/get-admin/", {
+    fetch(API_BASE_URL + "/api/get-admin/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
@@ -51,7 +53,7 @@ export default function Adminprofile() {
       return;
     }
 
-    fetch(`http://127.0.0.1:8000/api/admin/${admin.id}/`, {
+    fetch(`${API_BASE_URL}/api/admin/${admin.id}/`, {
       method: "PATCH", // PATCH to update only password
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password: newPassword }),
@@ -228,3 +230,4 @@ export default function Adminprofile() {
     </div>
   );
 }
+

@@ -4,6 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
+
 export default function CustomerDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 const [admin, setAdmin] = useState(null);
@@ -43,7 +45,7 @@ const animatedCustomerCount = useCountUp(customerCount, 800);
 
 
   useEffect(() => {
-  fetch("http://127.0.0.1:8000/api/equipment/")
+  fetch(API_BASE_URL + "/api/equipment/")
     .then(res => res.json())
     .then(data => {
       setEquipmentList(data.slice(0, 4)); // only first 4
@@ -72,7 +74,7 @@ useEffect(() => {
   console.log("Fetching admin data for email:", email); // debug
 
   // Fetch customer from backend
-  fetch("http://127.0.0.1:8000/api/get-admin/", { // match Django URL exactly
+  fetch(API_BASE_URL + "/api/get-admin/", { // match Django URL exactly
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
@@ -87,7 +89,7 @@ useEffect(() => {
 
 // count all equipment
 useEffect(() => {
-  fetch("http://127.0.0.1:8000/api/equipment/")
+  fetch(API_BASE_URL + "/api/equipment/")
     .then(res => res.json())
     .then(data => {
       setEquipmentList(data.slice(0, 4));
@@ -98,7 +100,7 @@ useEffect(() => {
 
 // count all rental
 useEffect(() => {
-  fetch("http://127.0.0.1:8000/api/payment/")
+  fetch(API_BASE_URL + "/api/payment/")
     .then(res => res.json())
     .then(data => {
       setRentalCount(data.length);
@@ -108,7 +110,7 @@ useEffect(() => {
 
 // count all customer
 useEffect(() => {
-  fetch("http://127.0.0.1:8000/api/customers/")
+  fetch(API_BASE_URL + "/api/customers/")
     .then(res => res.json())
     .then(data => {
       setCustomerCount(data.length);
@@ -386,3 +388,5 @@ function useCountUp(end, duration = 1000) {
     </div>
   );
 }
+
+

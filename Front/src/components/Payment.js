@@ -5,7 +5,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
+const API_BASE = API_BASE_URL;
 const PLACEHOLDER_IMAGE = "https://via.placeholder.com/300x300?text=No+Image";
 
 const getImageUrl = (image) => {
@@ -45,7 +46,7 @@ const [mobileNo, setMobileNo] = useState("");
     return;
   }
 
-  fetch(`http://127.0.0.1:8000/api/equipment/${id}/`)
+  fetch(`${API_BASE_URL}/api/equipment/${id}/`)
     .then(res => {
       console.log("Equipment fetch status:", res.status);
       if (!res.ok) throw new Error("Failed to fetch equipment");
@@ -72,7 +73,7 @@ const [mobileNo, setMobileNo] = useState("");
     const email = JSON.parse(customerData)?.email;
     if (!email) return;
 
-    fetch("http://127.0.0.1:8000/api/get-customer/", {
+    fetch(API_BASE_URL + "/api/get-customer/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
@@ -112,7 +113,7 @@ const [mobileNo, setMobileNo] = useState("");
 
   console.log("Submitting payment:", payload);
 
-  fetch("http://127.0.0.1:8000/api/payment/", {
+  fetch(API_BASE_URL + "/api/payment/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -317,3 +318,5 @@ const [mobileNo, setMobileNo] = useState("");
     </div>
   );
 }
+
+

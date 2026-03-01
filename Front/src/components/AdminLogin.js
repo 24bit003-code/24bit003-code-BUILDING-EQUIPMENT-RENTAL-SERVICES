@@ -6,6 +6,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
+
 export default function AdminLogin() {
 
   const navigate = useNavigate();
@@ -45,7 +47,7 @@ export default function AdminLogin() {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/login-admin/",
+        API_BASE_URL + "/api/login-admin/",
         payload
       );
 
@@ -201,3 +203,5 @@ export default function AdminLogin() {
     </div>
   );
 }
+
+

@@ -4,6 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
+
 export default function CustomerDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 const [customer, setCustomer] = useState(null);
@@ -37,7 +39,7 @@ const animatedRentalCount = useCountUp(rentalCount, 800);
 
 
   useEffect(() => {
-  fetch("http://127.0.0.1:8000/api/equipment/")
+  fetch(API_BASE_URL + "/api/equipment/")
     .then(res => res.json())
     .then(data => {
       setEquipmentList(data.slice(0, 4)); // only first 4
@@ -66,7 +68,7 @@ useEffect(() => {
   console.log("Fetching customer data for email:", email); // debug
 
   // Fetch customer from backend
-  fetch("http://127.0.0.1:8000/api/get-customer/", { // match Django URL exactly
+  fetch(API_BASE_URL + "/api/get-customer/", { // match Django URL exactly
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
@@ -81,7 +83,7 @@ useEffect(() => {
 
 // count all equipment
 useEffect(() => {
-  fetch("http://127.0.0.1:8000/api/equipment/")
+  fetch(API_BASE_URL + "/api/equipment/")
     .then(res => res.json())
     .then(data => {
       setEquipmentList(data.slice(0, 4));
@@ -93,7 +95,7 @@ useEffect(() => {
 useEffect(() => {
   if (!customer?.id) return;
 
-  fetch(`http://127.0.0.1:8000/api/payment/${customer.id}/`)
+  fetch(`${API_BASE_URL}/api/payment/${customer.id}/`)
     .then(res => res.json())
     .then(data => {
       setRentalCount(data.length); // total rentals by customer
@@ -323,7 +325,7 @@ function useCountUp(end, duration = 1000) {
         <img
           src={
             item.image
-              ? `http://127.0.0.1:8000${item.image}`
+              ? `${API_BASE_URL}${item.image}`
               : "/placeholder.jpg"
           }
           className="card-img-top"
@@ -442,3 +444,5 @@ function useCountUp(end, duration = 1000) {
     </div>
   );
 }
+
+

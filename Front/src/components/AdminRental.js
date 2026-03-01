@@ -4,6 +4,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
+
 export default function AdminRental() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [, setAdmin] = useState(null);
@@ -36,7 +38,7 @@ const [, setError] = useState("");              // store fetch error messages
 
     if (!email) return;
 
-    fetch("http://127.0.0.1:8000/api/get-admin/", {
+    fetch(API_BASE_URL + "/api/get-admin/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
@@ -52,9 +54,9 @@ useEffect(() => {
   setLoading(true);
 
   Promise.all([
-    fetch(`http://127.0.0.1:8000/api/payment/`).then(res => res.json()),
-    fetch(`http://127.0.0.1:8000/api/equipment/`).then(res => res.json()),
-    fetch(`http://127.0.0.1:8000/api/customers/`).then(res => res.json())
+    fetch(`${API_BASE_URL}/api/payment/`).then(res => res.json()),
+    fetch(`${API_BASE_URL}/api/equipment/`).then(res => res.json()),
+    fetch(`${API_BASE_URL}/api/customers/`).then(res => res.json())
   ])
     .then(([paymentsData, equipmentData,customerData]) => {
       setPayments(paymentsData);
@@ -81,7 +83,7 @@ const cusMap = {};
   const deleteRental = (id) => {
     if (!window.confirm("Are you sure you want to delete this rental?")) return;
 
-    fetch(`http://127.0.0.1:8000/api/payment/${id}/`, {
+    fetch(`${API_BASE_URL}/api/payment/${id}/`, {
       method: "DELETE",
     })
       .then(() => {
@@ -218,7 +220,7 @@ const cusMap = {};
               <td>
                 {eq && eq.image ? (
                   <img
-                    src={`http://127.0.0.1:8000${eq.image}`}
+                    src={`${API_BASE_URL}${eq.image}`}
                     alt={eq.equipment_name}
                     style={{ width: "80px", height: "70px", borderRadius: "5px" }}
                   />
@@ -261,3 +263,4 @@ const cusMap = {};
     </div>
   );
 }
+

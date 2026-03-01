@@ -4,6 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
+
 export default function AdminEquipment() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 const [, setAdmin] = useState(null);
@@ -32,7 +34,7 @@ const openUpdateModal = (equipment) => {
 const [equipmentList, setEquipmentList] = useState([]);
 
   useEffect(() => {
-  fetch("http://127.0.0.1:8000/api/equipment/")
+  fetch(API_BASE_URL + "/api/equipment/")
     .then(res => res.json())
     .then(data => {
       setEquipmentList(data); // <-- use all items
@@ -61,7 +63,7 @@ useEffect(() => {
   console.log("Fetching admin data for email:", email); // debug
 
   // Fetch customer from backend
-  fetch("http://127.0.0.1:8000/api/get-admin/", { // match Django URL exactly
+  fetch(API_BASE_URL + "/api/get-admin/", { // match Django URL exactly
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
@@ -78,7 +80,7 @@ useEffect(() => {
 const deleteEquipment = (id) => {
   if (!window.confirm("Delete this equipment?")) return;
 
-  fetch(`http://127.0.0.1:8000/api/equipment/${id}/`, {
+  fetch(`${API_BASE_URL}/api/equipment/${id}/`, {
     method: "DELETE"
   })
     .then(() => {
@@ -100,7 +102,7 @@ const updateEquipment = () => {
     formData.append("image", editingEquipment.image);
   }
 
-  fetch(`http://127.0.0.1:8000/api/equipment/${editingEquipment.id}/`, {
+  fetch(`${API_BASE_URL}/api/equipment/${editingEquipment.id}/`, {
     method: "PUT",
     body: formData
   })
@@ -139,7 +141,7 @@ const addEquipment = () => {
   formData.append("price_per_day", newEquipment.price_per_day);
   formData.append("image", newEquipment.image);
 
-  fetch("http://127.0.0.1:8000/api/equipment/", {
+  fetch(API_BASE_URL + "/api/equipment/", {
     method: "POST",
     body: formData
   })
@@ -336,7 +338,7 @@ const addEquipment = () => {
         >
           {/* Equipment Image */}
           <img
-            src={item.image ? `http://127.0.0.1:8000${item.image}` : "/placeholder.jpg"}
+            src={item.image ? `${API_BASE_URL}${item.image}` : "/placeholder.jpg"}
             className="card-img-top"
             alt={item.equipment_name}
             style={{ height: "170px"}}
@@ -517,3 +519,5 @@ Save Changes
     </div>
   );
 }
+
+
