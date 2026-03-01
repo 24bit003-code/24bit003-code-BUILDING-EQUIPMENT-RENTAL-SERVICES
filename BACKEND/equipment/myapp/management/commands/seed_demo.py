@@ -58,6 +58,18 @@ class Command(BaseCommand):
                     "image": image,
                 },
             )
+            changed = False
+            if force or not equipment.image:
+                equipment.image = image
+                changed = True
+            if force or not equipment.description:
+                equipment.description = description
+                changed = True
+            if force or not equipment.price_per_day:
+                equipment.price_per_day = price
+                changed = True
+            if changed:
+                equipment.save()
             created_equipment.append(equipment)
 
         # Create at least 3 rentals for dashboard visibility.
@@ -80,4 +92,3 @@ class Command(BaseCommand):
                 f"Equipment: {Equipment.objects.count()} | Rentals: {Payment.objects.count()}"
             )
         )
-

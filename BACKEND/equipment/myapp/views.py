@@ -45,6 +45,19 @@ def ensure_demo_data():
             equipment_name=name,
             defaults={"description": desc, "price_per_day": price, "image": image},
         )
+        # Keep existing records in sync if they were created without images/details.
+        changed = False
+        if not eq.image:
+            eq.image = image
+            changed = True
+        if not eq.description:
+            eq.description = desc
+            changed = True
+        if not eq.price_per_day:
+            eq.price_per_day = price
+            changed = True
+        if changed:
+            eq.save()
         equipment_objs.append(eq)
 
     if equipment_objs and not Payment.objects.filter(customer=customer).exists():
