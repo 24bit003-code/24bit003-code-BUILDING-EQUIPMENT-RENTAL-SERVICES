@@ -7,7 +7,7 @@ DEBUG = False
 ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME', '*')]
 CSRF_TRUSTED_ORIGINS = ['https://' + os.environ.get('RENDER_EXTERNAL_HOSTNAME', '')] if os.environ.get('RENDER_EXTERNAL_HOSTNAME') else []
 DEBUG = False
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.environ.get("SECRET_KEY", "render-fallback-secret-key-change-me")
 
 
 MIDDLEWARE = [
@@ -42,8 +42,7 @@ STORAGES = {
 
 DATABASES = {
     'default': dj_database_url.config(
-    # Replace this value with your local database's connection string.
-        default=os.environ["DATABASE_URL"],
+        default=os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
     conn_max_age=600
     )
         
