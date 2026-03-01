@@ -80,10 +80,10 @@ export default function AdminLogin() {
       }
 
     } catch (error) {
-      const backendMsg = error?.response?.data?.message;
+      const backendMsg = error?.response?.data?.message || error?.response?.data?.detail;
       setAlert({
         show: true,
-        message: backendMsg || "Server error. Hakikisha backend ina-run, kisha jaribu tena.",
+        message: backendMsg || `Network/CORS error: ${error?.message || "Request failed"}`,
         type: "danger"
       });
     }

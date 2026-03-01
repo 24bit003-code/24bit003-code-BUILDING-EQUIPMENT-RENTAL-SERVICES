@@ -105,7 +105,7 @@ export default function CustomerLogin() {
       const backendMsg = error?.response?.data?.message || error?.response?.data?.detail;
       setAlert({
         show: true,
-        message: backendMsg || "Server error. Try again.",
+        message: backendMsg || `Network/CORS error: ${error?.message || "Request failed"}`,
         type: "danger"
       });
     }

@@ -184,6 +184,11 @@ def login_customer(request):
             return Response({"success": False, "message": "Invalid Password or Email"})
     except Customer.DoesNotExist:
         return Response({"success": False, "message": "Customer not found"})
+    except Exception as e:
+        return Response(
+            {"success": False, "message": f"Login error: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 # ================================
@@ -264,21 +269,27 @@ def login_admin(request):
             "message": "Admin account haijapatikana. Tumia email sahihi, mfano: admin@equipment.com"
         })
 
-    if password == admin.password:
-        return Response({
-            "success": True,
-            "message": "Login successful",
-            "admin": {
-                "id": admin.id,
-                "name": admin.name,
-                "email": admin.email
-            }
-        })
+    try:
+        if password == admin.password:
+            return Response({
+                "success": True,
+                "message": "Login successful",
+                "admin": {
+                    "id": admin.id,
+                    "name": admin.name,
+                    "email": admin.email
+                }
+            })
 
-    return Response({
-        "success": False,
-        "message": "Password si sahihi kwa admin huyu."
-    })
+        return Response({
+            "success": False,
+            "message": "Password si sahihi kwa admin huyu."
+        })
+    except Exception as e:
+        return Response(
+            {"success": False, "message": f"Admin login error: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 # Update admin password
