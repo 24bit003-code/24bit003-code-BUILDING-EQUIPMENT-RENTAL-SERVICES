@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: building-equipment-rental-backend
+    runtime: python
+    rootDir: BACKEND/equipment
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate
+    startCommand: gunicorn equipment.wsgi:application
+    envVars:
+      - key: SECRET_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: FRONTEND_ORIGINS
+        sync: false

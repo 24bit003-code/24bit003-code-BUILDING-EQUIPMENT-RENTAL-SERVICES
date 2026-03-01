@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Environments
+.env
+*.env
+BACKEND/myvenv/
+
+# Databases
+*.sqlite3
+
+# OS/editor
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+Front/node_modules/
+Front/build/
+BACKEND/backend/staticfiles/
