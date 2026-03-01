@@ -3,6 +3,15 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
+const API_BASE = "http://127.0.0.1:8000";
+const PLACEHOLDER_IMAGE = "https://via.placeholder.com/160x120?text=No+Image";
+
+const getImageUrl = (image) => {
+  if (!image) return PLACEHOLDER_IMAGE;
+  if (image.startsWith("http://") || image.startsWith("https://")) return image;
+  return `${API_BASE}${image}`;
+};
+
 export default function CustomerRental() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [customer, setCustomer] = useState(null);
@@ -183,9 +192,9 @@ useEffect(() => {
       <td>{eq ? eq.equipment_name : "Loading..."}</td>
       <td>
         <img
-          src={eq ? `http://127.0.0.1:8000${eq.image}` : ""}
+          src={eq ? getImageUrl(eq.image) : PLACEHOLDER_IMAGE}
           alt={eq ? eq.equipment_name : "Loading..."}
-          style={{ width: "80px", height: "70px", borderRadius: "5px" }}
+          style={{ width: "80px", height: "70px", borderRadius: "5px", objectFit: "cover" }}
         />
       </td>
       <td>Tsh {eq ? eq.price_per_day : "..."}</td>

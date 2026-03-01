@@ -38,19 +38,23 @@ export default function AdminLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const payload = {
+      email: formData.email.trim(),
+      password: formData.password.trim(),
+    };
+
     try {
-      // API call directly in component
       const response = await axios.post(
         "http://127.0.0.1:8000/api/login-admin/",
-        formData
+        payload
       );
 
       const result = response.data;
 
       if(result.success){
-
-        // save customer info in sessionStorage
+        // Save admin session and clear customer session.
         sessionStorage.setItem("admin", JSON.stringify(result.admin));
+        sessionStorage.removeItem("customer");
 
         setAlert({
           show: true,
@@ -74,9 +78,10 @@ export default function AdminLogin() {
       }
 
     } catch (error) {
+      const backendMsg = error?.response?.data?.message;
       setAlert({
         show: true,
-        message: "Server error. Try again.",
+        message: backendMsg || "Server error. Hakikisha backend ina-run, kisha jaribu tena.",
         type: "danger"
       });
     }
@@ -175,7 +180,7 @@ export default function AdminLogin() {
 
           {/* Login Button */}
           <button className="btn btn-primary w-100 py-2 fw-semibold">
-            Login
+            Login 
           </button>
 
         </form>

@@ -39,7 +39,6 @@ export default function CustomerLogin() {
     e.preventDefault();
 
     try {
-      // API call directly in component
       const response = await axios.post(
         "http://127.0.0.1:8000/api/login-customer/",
         formData
@@ -48,9 +47,9 @@ export default function CustomerLogin() {
       const result = response.data;
 
       if(result.success){
-
-        // save customer info in sessionStorage
+        // Save customer session and clear admin session.
         sessionStorage.setItem("customer", JSON.stringify(result.customer));
+        sessionStorage.removeItem("admin");
 
         setAlert({
           show: true,
@@ -64,6 +63,29 @@ export default function CustomerLogin() {
         },1000);
 
       } else {
+        // If not a customer, try admin credentials automatically.
+        const adminResponse = await axios.post(
+          "http://127.0.0.1:8000/api/login-admin/",
+          formData
+        );
+
+        const adminResult = adminResponse.data;
+
+        if (adminResult.success) {
+          sessionStorage.setItem("admin", JSON.stringify(adminResult.admin));
+          sessionStorage.removeItem("customer");
+
+          setAlert({
+            show: true,
+            message: "Admin account detected. Redirecting to Admin dashboard...",
+            type: "success"
+          });
+
+          setTimeout(() => {
+            navigate("/AdminDashboard");
+          }, 1000);
+          return;
+        }
 
         setAlert({
           show: true,

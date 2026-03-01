@@ -5,6 +5,15 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
+const API_BASE = "http://127.0.0.1:8000";
+const PLACEHOLDER_IMAGE = "https://via.placeholder.com/300x300?text=No+Image";
+
+const getImageUrl = (image) => {
+  if (!image) return PLACEHOLDER_IMAGE;
+  if (image.startsWith("http://") || image.startsWith("https://")) return image;
+  return `${API_BASE}${image}`;
+};
+
 export default function Payment() {
   const navigate = useNavigate();
   const { id } = useParams(); // equipment ID from URL
@@ -218,13 +227,13 @@ const [mobileNo, setMobileNo] = useState("");
           {/* Equipment Image */}
           <div className="col-md-6 d-flex justify-content-center align-items-center">
   <img
-    src={`http://127.0.0.1:8000${equipment.image}`}
+    src={getImageUrl(equipment.image)}
     alt={equipment.equipment_name}
     className="img-fluid rounded shadow"
     style={{
       width: '300px',   // desired width
       height: '300px',  // desired height
-       // maintain aspect ratio and crop if needed
+      objectFit: "cover",
     }}
   />
 </div>
