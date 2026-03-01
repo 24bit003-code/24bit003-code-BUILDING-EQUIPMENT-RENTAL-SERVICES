@@ -18,16 +18,25 @@ def ensure_demo_data():
         defaults={"name": "Main Admin", "password": "admin123"},
     )
 
-    customer, _ = Customer.objects.get_or_create(
-        email="demo@customer.com",
-        defaults={
-            "name": "Demo Customer",
-            "phone": "0712345678",
-            "address": "Dar es Salaam",
-            "password": "12345",
-            "age": "28",
-        },
-    )
+    customers_seed = [
+        ("Demo Customer", "demo@customer.com", "0712345678", "Dar es Salaam", "12345", "28"),
+        ("Asha M", "asha@customer.com", "0711111111", "Arusha", "12345", "26"),
+        ("John K", "john@customer.com", "0722222222", "Mwanza", "12345", "31"),
+        ("Neema P", "neema@customer.com", "0733333333", "Dodoma", "12345", "24"),
+    ]
+    customers = []
+    for name, email, phone, address, password, age in customers_seed:
+        c, _ = Customer.objects.get_or_create(
+            email=email,
+            defaults={
+                "name": name,
+                "phone": phone,
+                "address": address,
+                "password": password,
+                "age": age,
+            },
+        )
+        customers.append(c)
 
     equipment_seed = [
         ("Wheel Barrow", "Heavy-duty wheelbarrow for site transport", Decimal("15000.00"), "equipment_images/barrow.jpg"),
@@ -60,18 +69,21 @@ def ensure_demo_data():
             eq.save()
         equipment_objs.append(eq)
 
-    if equipment_objs and not Payment.objects.filter(customer=customer).exists():
-        for i in range(min(3, len(equipment_objs))):
-            eq = equipment_objs[i]
+    # Ensure rentals exist for dashboard/admin views.
+    for idx, c in enumerate(customers):
+        existing = Payment.objects.filter(customer=c).count()
+        needed = max(0, 3 - existing)
+        for i in range(needed):
+            eq = equipment_objs[(idx + i) % len(equipment_objs)]
             Payment.objects.create(
-                customer=customer,
+                customer=c,
                 equipment=eq,
                 amount=eq.price_per_day,
-                method="Mpesa",
-                mobile_no=customer.phone,
+                method="Mpesa" if i % 2 == 0 else "Airtel Money",
+                mobile_no=c.phone,
             )
 
-    return admin, customer
+    return admin, customers[0]
 
 
 # ================================
