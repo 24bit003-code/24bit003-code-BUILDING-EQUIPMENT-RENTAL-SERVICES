@@ -27,6 +27,8 @@ MIDDLEWARE = [
 # https://your-frontend.vercel.app,https://your-domain.com
 FRONTEND_ORIGINS = os.environ.get("FRONTEND_ORIGINS", "")
 CORS_ALLOWED_ORIGINS = [o.strip() for o in FRONTEND_ORIGINS.split(",") if o.strip()]
+if not CORS_ALLOWED_ORIGINS:
+    CORS_ALLOW_ALL_ORIGINS = True
 
 STORAGES = {
     "default": {

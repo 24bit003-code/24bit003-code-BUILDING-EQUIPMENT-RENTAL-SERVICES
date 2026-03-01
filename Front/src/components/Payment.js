@@ -5,7 +5,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "https://queen-building-equipment-rental-services.onrender.com";
 const API_BASE = API_BASE_URL;
 const PLACEHOLDER_IMAGE = "https://via.placeholder.com/300x300?text=No+Image";
 
@@ -318,5 +318,6 @@ const [mobileNo, setMobileNo] = useState("");
     </div>
   );
 }
+
 
 

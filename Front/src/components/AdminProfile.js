@@ -4,7 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "https://queen-building-equipment-rental-services.onrender.com";
 
 export default function Adminprofile() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -230,4 +230,5 @@ export default function Adminprofile() {
     </div>
   );
 }
+
 
