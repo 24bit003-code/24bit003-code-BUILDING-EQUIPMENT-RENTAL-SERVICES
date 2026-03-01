@@ -6,9 +6,59 @@ from .serializers import *
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from decimal import Decimal
 
 def normalize_credential(value):
     return (value or "").strip()
+
+
+def ensure_demo_data():
+    admin, _ = Admin.objects.get_or_create(
+        email="admin@equipment.com",
+        defaults={"name": "Main Admin", "password": "admin123"},
+    )
+
+    customer, _ = Customer.objects.get_or_create(
+        email="demo@customer.com",
+        defaults={
+            "name": "Demo Customer",
+            "phone": "0712345678",
+            "address": "Dar es Salaam",
+            "password": "12345",
+            "age": "28",
+        },
+    )
+
+    equipment_seed = [
+        ("Wheel Barrow", "Heavy-duty wheelbarrow for site transport", Decimal("15000.00"), "equipment_images/barrow.jpg"),
+        ("Concrete Mixer", "Portable concrete mixer for construction", Decimal("85000.00"), "equipment_images/ConcreteMixer.jpg"),
+        ("Excavator", "Excavator for digging and earthmoving", Decimal("250000.00"), "equipment_images/extravator_1.jpg"),
+        ("Generator", "Backup generator for site power", Decimal("120000.00"), "equipment_images/Generator.jpg"),
+        ("Power Drill", "Electric power drill for fastening and drilling", Decimal("25000.00"), "equipment_images/PowerDrill.jpg"),
+        ("Ladder", "Industrial ladder for elevated work", Decimal("18000.00"), "equipment_images/leddar3.webp"),
+        ("Saw Machine", "Cutting saw for wood/metal jobs", Decimal("30000.00"), "equipment_images/Saws.jpg"),
+    ]
+
+    equipment_objs = []
+    for name, desc, price, image in equipment_seed:
+        eq, _ = Equipment.objects.get_or_create(
+            equipment_name=name,
+            defaults={"description": desc, "price_per_day": price, "image": image},
+        )
+        equipment_objs.append(eq)
+
+    if equipment_objs and not Payment.objects.filter(customer=customer).exists():
+        for i in range(min(3, len(equipment_objs))):
+            eq = equipment_objs[i]
+            Payment.objects.create(
+                customer=customer,
+                equipment=eq,
+                amount=eq.price_per_day,
+                method="Mpesa",
+                mobile_no=customer.phone,
+            )
+
+    return admin, customer
 
 
 # ================================
@@ -30,6 +80,9 @@ def generic_api(model_class, serializer_class):
 
     @api_view(['GET', 'POST','PATCH', 'PUT', 'DELETE'])
     def api(request, pk=None):
+        # Keep production usable even if database was freshly reset.
+        if request.method == 'GET' and model_class in [Customer, Equipment, Payment]:
+            ensure_demo_data()
 
         # -----------------------------
         # GET all or single
@@ -165,6 +218,7 @@ def register_customer(request):
 # ================================
 @api_view(['POST'])
 def login_customer(request):
+    ensure_demo_data()
     email = normalize_credential(request.data.get('email')).lower()
     password = normalize_credential(request.data.get('password'))
 
@@ -247,6 +301,7 @@ def get_admin_by_email(request):
 # ================================
 @api_view(['POST'])
 def login_admin(request):
+    ensure_demo_data()
     email = normalize_credential(request.data.get('email')).lower()
     password = normalize_credential(request.data.get('password'))
 
