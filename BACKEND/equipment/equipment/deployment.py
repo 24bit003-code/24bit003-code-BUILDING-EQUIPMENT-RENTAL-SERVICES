@@ -3,8 +3,8 @@ import os
 from.settings import BASE_DIR
 import dj_database_url
 DEBUG = False
-# Django expects ALLOWED_HOSTS (plural).
-ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME', '*')]
+# Keep host checks permissive in current deployment to avoid host/CORS blocking.
+ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ['https://' + os.environ.get('RENDER_EXTERNAL_HOSTNAME', '')] if os.environ.get('RENDER_EXTERNAL_HOSTNAME') else []
 DEBUG = False
 SECRET_KEY = os.environ.get("SECRET_KEY", "render-fallback-secret-key-change-me")
@@ -27,8 +27,8 @@ MIDDLEWARE = [
 # https://your-frontend.vercel.app,https://your-domain.com
 FRONTEND_ORIGINS = os.environ.get("FRONTEND_ORIGINS", "")
 CORS_ALLOWED_ORIGINS = [o.strip() for o in FRONTEND_ORIGINS.split(",") if o.strip()]
-if not CORS_ALLOWED_ORIGINS:
-    CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 STORAGES = {
     "default": {
